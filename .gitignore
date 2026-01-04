@@ -1,0 +1,36 @@
+# Unity generated
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+
+# Visual Studio / Rider
+.vs/
+.vscode/
+.idea/
+*.csproj
+*.sln
+*.user
+*.userprefs
+*.pidb
+*.booproj
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Crash reports
+sysinfo.txt
+
+# Unity meta cache
+*.pidb.meta
+
+# Addressables
+AddressableAssetsData/*/BuildLayoutReport*
+AddressableAssetsData/*/BuildLayoutReport*.json
+
+# Packages lock (opcional, pero recomendado ignorarlo)
+Packages/packages-lock.json
