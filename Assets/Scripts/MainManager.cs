@@ -1,51 +1,55 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Mirror;
 
 public class MainManager : MonoBehaviour
 {
+    [SerializeField] private GameObject gameOverUI;
+    [SerializeField] private GameObject gameClearUI;
 
-    [SerializeField, Header("ゲームオーバーUI")]
-    private GameObject gameOverUI;
-
-    [SerializeField, Header("ゲームクリアーUI")]
-    private GameObject gameClearUI;
-
-    private GameObject player;
-    private bool bShowUI;
-
+    private PlayerHealth localPlayerHealth;
+    private bool uiShown;
 
     void Start()
     {
-        player = FindFirstObjectByType<Player>().gameObject;
-        bShowUI = false;
+        gameOverUI.SetActive(false);
+        gameClearUI.SetActive(false);
+    }
+
+    public void RegisterLocalPlayer(PlayerHealth health)
+    {
+        localPlayerHealth = health;
     }
 
     void Update()
     {
-        ShowGameOverUI();
+        if (uiShown || localPlayerHealth == null) return;
+
+        if (localPlayerHealth.HP <= 0)
+        {
+            ShowGameOverUI();
+        }
     }
 
-
-    private void ShowGameOverUI()
+    void ShowGameOverUI()
     {
-        if (player) return;
-
         gameOverUI.SetActive(true);
-        bShowUI = true;
+        uiShown = true;
+        Time.timeScale = 0f;
     }
-
 
     public void ShowGameClearUI()
     {
         gameClearUI.SetActive(true);
-        bShowUI = true;
+        uiShown = true;
+        Time.timeScale = 0f;
     }
 
     public void OnRestart()
     {
-        if (!bShowUI) return;
+        if (!uiShown) return;
+
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

@@ -23,13 +23,13 @@ public class PlayerInputHandler : NetworkBehaviour
 
     public void OnMove(InputAction.CallbackContext ctx)
     {
-        if (!hasAuthority) return;
+        if (!isLocalPlayer) return;
         controller.CmdMove(ctx.ReadValue<Vector2>());
     }
 
     public void OnJump(InputAction.CallbackContext ctx)
     {
-        if (!hasAuthority || !ctx.performed) return;
+        if (!isLocalPlayer|| !ctx.performed) return;
         controller.CmdJump();
     }
 }

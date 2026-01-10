@@ -1,122 +1,83 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
 public class CameraManager : MonoBehaviour
 {
-    [SerializeField, Header("振動する時間")]
-    private float shakeTime;
-    [SerializeField, Header("振動の大きさ")]
-    private float shakeMagnitude;
-
+    [SerializeField] private float shakeTime;
+    [SerializeField] private float shakeMagnitude;
     [SerializeField] private float yPermission;
     [SerializeField] private float xPermission;
 
-    private Player player;
-    private float shakeCount;
-    private int currentPlayerHP;
-    private Vector3 _initPos;
+    private Transform target;
+    private PlayerHealth playerHealth;
+
+    private int currentHP;
+    private Vector3 initPos;
+    private Coroutine shakeRoutine;
 
     void Start()
     {
-        player = FindFirstObjectByType<Player>();
-        currentPlayerHP = player.GetHP();
-        _initPos = transform.position;
+        initPos = transform.position;
     }
 
     void Update()
     {
-        ShakeCheck();
-        FollowPlayer();
+        if (target == null || playerHealth == null) return;
+
+        CheckShake();
+        FollowTarget();
     }
 
-
-    private void ShakeCheck()
+    // 🔹 llamado por PlayerNetwork (solo jugador local)
+    public void RegisterLocalPlayer(PlayerHealth health)
     {
-        if (currentPlayerHP != player.GetHP())
-        {
-            currentPlayerHP = player.GetHP();
-            shakeCount = 0.0f;
-            StartCoroutine(Shake());
-        }
+        playerHealth = health;
+        target = health.transform;
+        currentHP = health.HP;
     }
 
-    IEnumerator Shake()
+    private void CheckShake()
     {
-        Vector3 initPos = transform.position;
+        int hp = playerHealth.HP;
+        if (hp == currentHP) return;
 
-        while (shakeCount < shakeTime)
+        currentHP = hp;
+
+        if (shakeRoutine != null)
+            StopCoroutine(shakeRoutine);
+
+        shakeRoutine = StartCoroutine(Shake());
+    }
+
+    private void FollowTarget()
+    {
+        Vector3 pos = transform.position;
+        Vector3 t = target.position;
+
+        if (Mathf.Abs(t.x - pos.x) > xPermission)
+            pos.x = t.x - Mathf.Sign(t.x - pos.x) * xPermission;
+
+        if (Mathf.Abs(t.y - pos.y) > yPermission)
+            pos.y = t.y - Mathf.Sign(t.y - pos.y) * yPermission;
+
+        transform.position = new Vector3(pos.x, pos.y, initPos.z);
+    }
+
+    private IEnumerator Shake()
+    {
+        Vector3 basePos = transform.position;
+        float elapsed = 0f;
+
+        while (elapsed < shakeTime)
         {
-            float x = initPos.x + Random.Range(-shakeMagnitude, shakeMagnitude);
-            float y = initPos.y + Random.Range(-shakeMagnitude, shakeMagnitude);
-            transform.position = new Vector3(x, y, initPos.z);
+            transform.position = basePos +
+                (Vector3)Random.insideUnitCircle * shakeMagnitude;
 
-            shakeCount += Time.deltaTime;
-
+            elapsed += Time.deltaTime;
             yield return null;
         }
-        transform.position = initPos;
+
+        transform.position = basePos;
+        shakeRoutine = null;
     }
-
-    /*private void FollowPlayer() //original from video
-    {
-        float x = player.transform.position.x;
-        x = Mathf.Clamp(x, _initPos.x, Mathf.Infinity);
-        transform.position = new Vector3(x, transform.position.y, transform.position.z);
-    }*/
-
-    /*private void FollowPlayer() //invento raro
-    {
-        float x = player.transform.position.x;
-        float y = transform.position.y;
-
-        if ( +y - (+player.transform.position.y) > yPermission )
-        {
-            y = player.transform.position.y;
-            y = Mathf.Clamp(y, _initPos.y, Mathf.Infinity);
-        }
-
-        x = Mathf.Clamp(x, _initPos.x, Mathf.Infinity);
-        transform.position = new Vector3(x, y, transform.position.z);
-
-    }*/
-
-    /*private void FollowPlayer() //robotito1
-    {
-        Vector2 camPos = new Vector2(transform.position.x, transform.position.y);
-        Vector2 playerPos = new Vector2(player.transform.position.x, player.transform.position.y);
-
-        float distancia = Vector2.Distance(camPos, playerPos);
-
-        if (distancia > yPermission)
-        {
-            Vector2 nuevaPos = Vector2.MoveTowards(camPos, playerPos, distancia - yPermission);
-
-            transform.position = new Vector3(nuevaPos.x, nuevaPos.y, transform.position.z);
-        }
-    }*/
-
-    private void FollowPlayer()
-    {
-        float camX = transform.position.x;
-        float camY = transform.position.y;
-
-        float playerX = player.transform.position.x;
-        float playerY = player.transform.position.y;
-
-        if (Mathf.Abs(playerX - camX) > xPermission)
-        {
-            camX = playerX - Mathf.Sign(playerX - camX) * xPermission;
-            camX = Mathf.Clamp(camX, _initPos.x, Mathf.Infinity);
-        }
-
-        if (Mathf.Abs(playerY - camY) > yPermission)
-        {
-            camY = playerY - Mathf.Sign(playerY - camY) * yPermission;
-            camY = Mathf.Clamp(camY, _initPos.y, Mathf.Infinity);
-        }
-
-        transform.position = new Vector3(camX, camY, transform.position.z);
-    }
-
 }

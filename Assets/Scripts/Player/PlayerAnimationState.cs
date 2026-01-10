@@ -20,6 +20,6 @@ public class PlayerAnimationState : NetworkBehaviour
     {
         anim.SetFloat("Speed", Mathf.Abs(rb.linearVelocity.x));
         anim.SetBool("Grounded", ground.IsGrounded);
-        anim.SetBool("Dead", health.IsDead);
+        //anim.SetBool("Dead", health.IsDead);
     }
 }

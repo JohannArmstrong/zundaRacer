@@ -4,9 +4,20 @@ using UnityEngine;
 public class PlayerGroundCheck : NetworkBehaviour
 {
     [SerializeField] LayerMask floorMask;
-    [SerializeField] CapsuleCollider2D col;
+    
+    private CapsuleCollider2D col;
 
-    [SyncVar] public bool IsGrounded;
+    public bool IsGrounded;
+
+    void Awake()
+    {
+        col = GetComponent<CapsuleCollider2D>();
+
+        if (col == null)
+        {
+            Debug.LogError("PlayerGroundCheck's CapsuleCollider2D not found in object");
+        }
+    }
 
     void FixedUpdate()
     {
