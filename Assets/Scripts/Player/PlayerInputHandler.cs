@@ -4,7 +4,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerInputHandler : NetworkBehaviour
 {
-    PlayerController controller;
+    private PlayerController controller;
+    private Vector2 moveInput;
 
     void Awake()
     {
@@ -16,20 +17,25 @@ public class PlayerInputHandler : NetworkBehaviour
         enabled = true;
     }
 
-    void OnDisable()
+    void Update()
     {
-        enabled = false;
+        if (!isOwned) return;
+
+        controller.SetMove(moveInput);
     }
 
     public void OnMove(InputAction.CallbackContext ctx)
     {
-        if (!isLocalPlayer) return;
-        controller.CmdMove(ctx.ReadValue<Vector2>());
+        if (!isOwned) return;
+
+        // guardamos el input, no ejecutamos lógica
+        moveInput = ctx.ReadValue<Vector2>();
     }
 
     public void OnJump(InputAction.CallbackContext ctx)
     {
-        if (!isLocalPlayer|| !ctx.performed) return;
-        controller.CmdJump();
+        if (!isOwned || !ctx.performed) return;
+        controller.SetJump();
     }
 }
+

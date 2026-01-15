@@ -8,30 +8,42 @@ public class PlayerController : NetworkBehaviour
 
     Rigidbody2D rb;
     PlayerGroundCheck ground;
-
-    [SyncVar] Vector2 velocity;
+    
+    private PlayerVisual visual;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         ground = GetComponent<PlayerGroundCheck>();
+        visual = GetComponentInChildren<PlayerVisual>();
     }
 
-    void FixedUpdate()
+    
+    [Client]
+    public void SetMove(Vector2 dir)
     {
-        if (!isServer) return;
+        if (!isOwned) return;
 
-        rb.linearVelocity = velocity;
+        visual?.SetFacing(dir.x);
+        CmdMove(dir.x);
+    }
+
+    [Client]
+    public void SetJump()
+    {
+        if (!isOwned) return;
+        CmdJump();
+    }
+
+    // SERVIDOR
+    [Command]
+    void CmdMove(float x)
+    {
+        rb.linearVelocity = new Vector2(x * moveSpeed, rb.linearVelocity.y);
     }
 
     [Command]
-    public void CmdMove(Vector2 input)
-    {
-        velocity.x = input.x * moveSpeed;
-    }
-
-    [Command]
-    public void CmdJump()
+    void CmdJump()
     {
         if (!ground.IsGrounded) return;
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
