@@ -11,8 +11,10 @@ public class EnemyPatrolState : IEnemyState
     public void Enter()
     {
         enemy.Visual.SetFacing(direction);
+        enemy.Visual.SetIdle(false);
     }
 
+    // DECISIONES (Update)
     public void Tick()
     {
         if (!enemy.Sensors.IsGrounded)
@@ -32,7 +34,14 @@ public class EnemyPatrolState : IEnemyState
 
     public void FixedTick()
     {
+        if (!enemy.Sensors.IsGrounded)
+        {
+            enemy.Motor.Stop(); // deja Y libre
+            return;
+        }
+
         enemy.Motor.Move(direction);
+        enemy.Visual.SetFacing(direction);
     }
 
     public void Exit()
@@ -40,4 +49,3 @@ public class EnemyPatrolState : IEnemyState
         enemy.Motor.Stop();
     }
 }
-

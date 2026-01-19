@@ -18,47 +18,69 @@ public class EnemySensors : MonoBehaviour
     // --- GROUND CHECK ---
     public void CheckGround()
     {
-        Vector2 size = col.size * transform.lossyScale;
-        Vector2 offset = col.offset * transform.lossyScale;
+        //Debug.Log("CheckGround ejecutándose", this);
 
-        float footY = offset.y - size.y * 0.5f;
-        Vector2 rayPos = (Vector2)transform.position + new Vector2(0, footY - 0.05f);
-        Vector2 raySize = new Vector2(size.x * 0.9f, 0.1f);
 
-        RaycastHit2D hit = Physics2D.BoxCast(
-            rayPos,
-            raySize,
-            0,
-            Vector2.zero,
-            0,
-            floorMask
+        Bounds b = col.bounds;
+
+        Vector2 rayPos = new Vector2(
+            b.center.x,
+            b.min.y - 0.05f
         );
 
-        IsGrounded = hit.collider != null;
+        Vector2 raySize = new Vector2(
+            b.size.x * 1f,
+            0.1f
+        );
+
+        Debug.DrawLine(
+            rayPos - Vector2.right * raySize.x * 0.5f,
+            rayPos + Vector2.right * raySize.x * 0.5f,
+            Color.green
+        );
+
+        IsGrounded = Physics2D.BoxCast(
+            rayPos,
+            raySize,
+            0f,
+            Vector2.zero,
+            0f,
+            LayerMask.GetMask("Floor")
+        );
     }
+
 
     // --- WALL AHEAD ---
     public bool WallAhead(float direction)
     {
+        //Debug.Log("WallAhead ejecutándose", this);
+
         if (direction == 0) return false;
 
         Bounds b = col.bounds;
 
         Vector2 checkPos = new Vector2(
-            b.center.x + (b.extents.x + 0.05f) * Mathf.Sign(direction),
+            direction > 0 ? b.max.x + 0.05f : b.min.x - 0.05f,
             b.center.y
         );
 
         Vector2 boxSize = new Vector2(
-            0.05f,
+            0.1f,
             b.size.y * 0.8f
+        );
+
+        Debug.DrawLine(
+            checkPos + Vector2.up * boxSize.y * 0.5f,
+            checkPos - Vector2.up * boxSize.y * 0.5f,
+            Color.red
         );
 
         return Physics2D.OverlapBox(
             checkPos,
             boxSize,
             0f,
-            floorMask
+            LayerMask.GetMask("Floor")
         );
     }
+
 }

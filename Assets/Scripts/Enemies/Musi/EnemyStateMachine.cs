@@ -32,6 +32,7 @@ public class EnemyStateMachine : NetworkBehaviour
     [ServerCallback]
     void FixedUpdate()
     {
+        Sensors.CheckGround();
         currentState?.FixedTick();
     }
 

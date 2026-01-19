@@ -22,7 +22,7 @@ public class EnemyMotor : NetworkBehaviour
     [Server]
     public void Stop()
     {
-        rb.linearVelocity = Vector2.zero;
+        rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
     }
 
     void Flip(float dir)
