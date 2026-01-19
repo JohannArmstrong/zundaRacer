@@ -1,5 +1,6 @@
 using Mirror;
 using UnityEngine;
+using System.Collections;
 
 public class PlayerHealth : NetworkBehaviour
 {
@@ -7,22 +8,49 @@ public class PlayerHealth : NetworkBehaviour
     private int hp;
 
     [SerializeField] private int maxHp = 5;
+    [SerializeField] public float invulnerableTime { get; private set; } = 1.0f;
+
+    // Tiempo hasta el cual el jugador es invulnerable (server)
+    private double invulnerableUntil;
+
+
+    private PlayerVisual visual;
 
     public int HP => hp;
     public int MaxHP => maxHp;
+    public float InvulnerableTime => invulnerableTime;
+
+    void Awake()
+    {
+        visual = GetComponentInChildren<PlayerVisual>();
+    }
 
     public override void OnStartServer()
     {
         hp = maxHp;
+        invulnerableUntil = 0;
     }
+
+
 
     [Server]
     public void TakeDamage(int amount)
     {
+        // invulnerabilidad por tiempo (determinista)
+        if (NetworkTime.time < invulnerableUntil) return;
         if (hp <= 0) return;
 
         hp = Mathf.Max(hp - amount, 0);
+        invulnerableUntil = NetworkTime.time + invulnerableTime;
+
+        RpcOnDamaged();
+
+        if (hp <= 0)
+        {
+            //Die();
+        }
     }
+
 
     void OnHpChanged(int oldHp, int newHp)
     {
@@ -31,10 +59,10 @@ public class PlayerHealth : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void RpcBounce()
+    void RpcOnDamaged()
     {
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        rb.linearVelocity = new Vector2(rb.linearVelocityX, 0);
-        rb.AddForce(Vector2.up * 6f, ForceMode2D.Impulse);
+        visual?.StartClientBlink();
     }
+    
+    
 }

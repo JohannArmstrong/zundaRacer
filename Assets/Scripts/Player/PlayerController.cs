@@ -8,7 +8,7 @@ public class PlayerController : NetworkBehaviour
 
     Rigidbody2D rb;
     PlayerGroundCheck ground;
-    
+
     private PlayerVisual visual;
 
     void Awake()
@@ -18,7 +18,7 @@ public class PlayerController : NetworkBehaviour
         visual = GetComponentInChildren<PlayerVisual>();
     }
 
-    
+
     [Client]
     public void SetMove(Vector2 dir)
     {
@@ -47,5 +47,12 @@ public class PlayerController : NetworkBehaviour
     {
         if (!ground.IsGrounded) return;
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+    }
+    
+    [ClientRpc]
+    public void RpcBounce()
+    {
+        rb.linearVelocity = new Vector2(rb.linearVelocityX, 0);
+        rb.AddForce(Vector2.up * 6f, ForceMode2D.Impulse);
     }
 }

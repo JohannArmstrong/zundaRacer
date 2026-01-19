@@ -29,13 +29,15 @@ public class EnemyCombat : NetworkBehaviour
             return;
 
         PlayerHealth player = collision.collider.GetComponent<PlayerHealth>();
-        if (player == null) return;
+        PlayerController playerController = collision.collider.GetComponent<PlayerController>();
+
+        if (player == null || playerController == null) return;
 
         // ¿El player cayó encima?
         if (PlayerCameFromAbove(collision))
         {
             TakeDamage(1);
-            player.RpcBounce();
+            playerController.RpcBounce();
         }
         else
         {
@@ -53,67 +55,7 @@ public class EnemyCombat : NetworkBehaviour
         }
         return false;
     }
-    // [ServerCallback]
-    // void OnCollisionEnter2D(Collision2D collision)
-    // {
-
-    //     Debug.Log("COLLISION on SERVER");
-    //     Debug.Log("Collider name: " + collision.collider.name);
-    //     Debug.Log("Collider type: " + collision.collider.GetType());
-    //     Debug.Log("Collider GameObject: " + collision.collider.gameObject.name);
-
-    //     var playerHealth = collision.collider.GetComponent<PlayerHealth>();
-    //     Debug.Log("PlayerHealth on collider: " + (playerHealth != null));
-
-    //     var playerHealthOnGO = collision.collider.gameObject.GetComponent<PlayerHealth>();
-    //     Debug.Log("PlayerHealth on GameObject: " + (playerHealthOnGO != null));
-
-    //     // Debug.Log("COLLISION detected on " + (isServer ? "SERVER" : "CLIENT"));
-
-    //     // PlayerHealth player = collision.collider.GetComponent<PlayerHealth>();
-    //     // if (player == null)
-    //     // {
-    //     //     Debug.Log("player collision collider null");
-    //     //     return;
-    //     // }
-    //     // Analizamos el contacto
-    //     // foreach (ContactPoint2D contact in collision.contacts)
-    //     // {
-    //     //     // Player viene desde arriba
-    //     //     if (contact.normal.y > 0.5f)
-    //     //     {
-    //     //         OnStompedByPlayer(player);
-    //     //         return;
-    //     //     }
-    //     // }
-
-    //     // // Si no fue stomp → daño al player
-    //     // player.TakeDamage(contactDamage);
-    // }
-
-    [Server]
-    void OnStompedByPlayer(PlayerHealth player)
-    {
-        TakeDamage(1);
-
-        // rebote del player (RPC visual)
-        player.RpcBounce();
-    }
-
-
-    // [ServerCallback]
-    // void OnTriggerEnter2D(Collider2D other)
-    // {
-    //     TryDamage(other);
-    // }
-
-    // void TryDamage(Collider2D col)
-    // {
-    //     PlayerHealth player = col.GetComponent<PlayerHealth>();
-    //     if (player == null) return;
-
-    //     player.TakeDamage(contactDamage);
-    // }
+    
 
     // --- RECIBIR DAÑO ---
     [ServerCallback]
