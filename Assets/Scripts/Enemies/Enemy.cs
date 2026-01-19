@@ -87,48 +87,6 @@ public class Enemy : MonoBehaviour
             transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
     }
 
-    // versi'on con l'inea horizontal
-    // private void ChangeMoveDirection()
-    // {
-    //     Debug.Log("moveDirection.x = " + moveDirection.x);
-
-    //     int layerMask = LayerMask.GetMask("Floor");
-
-    //     // Datos reales del collider
-    //     Vector2 size = coraida.size;
-    //     Vector2 offset = coraida.offset;
-    //     Vector3 scale = transform.lossyScale;
-
-    //     size *= new Vector2(scale.x, scale.y);
-    //     offset *= new Vector2(scale.x, scale.y);
-
-    //     // Posición del rayo: al frente del personaje
-    //     float frontX = offset.x + (size.x * 0.5f * moveDirection.x);
-
-    //     Vector2 rayOrigin = new Vector2(
-    //         transform.position.x + frontX,
-    //         transform.position.y
-    //     );
-
-    //     Vector2 direction = Vector2.right * moveDirection.x;
-    //     float distance = 0.1f;
-
-    //     // Debug visual
-    //     Debug.DrawRay(rayOrigin, direction * distance, Color.red);
-
-    //     RaycastHit2D hit = Physics2D.Raycast(
-    //         rayOrigin,
-    //         direction,
-    //         distance,
-    //         layerMask
-    //     );
-
-    //     if (hit.collider != null)
-    //     {
-    //         moveDirection.x *= -1;
-    //     }
-    // }
-
 
     private void HitFloor()
     {

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7646815649045598894}
   - component: {fileID: -5806558000754461664}
   - component: {fileID: 8007999143583726921}
+  - component: {fileID: 1335408274538998071}
   m_Layer: 0
   m_Name: SpawnMusi
   m_TagString: Untagged
@@ -46,7 +47,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2932112d63e59740a2587e6ea02b901, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 6773102291556012072, guid: 1563652fa08038c469624f8f064a7919, type: 3}
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  enemyPrefab: {fileID: 6773102291556012072, guid: 1563652fa08038c469624f8f064a7919, type: 3}
 --- !u!212 &-5806558000754461664
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -114,3 +118,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa9a9a4be0c66a34b8324001252c6037, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1335408274538998071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6404121960981498703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 2173801695
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0

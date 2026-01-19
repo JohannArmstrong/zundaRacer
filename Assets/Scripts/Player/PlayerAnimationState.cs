@@ -18,8 +18,8 @@ public class PlayerAnimationState : NetworkBehaviour
 
     void Update()
     {
-        anim.SetFloat("Speed", Mathf.Abs(rb.linearVelocity.x));
-        anim.SetBool("Grounded", ground.IsGrounded);
+        //anim.SetFloat("Speed", Mathf.Abs(rb.linearVelocity.x));
+        anim.SetBool("Jump", !ground.IsGrounded);
         //anim.SetBool("Dead", health.IsDead);
     }
 }

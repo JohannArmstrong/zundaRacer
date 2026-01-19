@@ -203,7 +203,6 @@ GameObject:
   - component: {fileID: 7037638728601179163}
   - component: {fileID: 4579868623275356721}
   - component: {fileID: 1417846898686611870}
-  - component: {fileID: 9147377670474729467}
   m_Layer: 0
   m_Name: ZundaVisual
   m_TagString: Untagged
@@ -219,13 +218,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9052604727993191829}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2012420892896475873}
-  m_Father: {fileID: 2507605666320262016}
+  m_Father: {fileID: 2783195987071765226}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7037638728601179163
 SpriteRenderer:
@@ -329,13 +328,46 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &9147377670474729467
+--- !u!1 &9076269720686682060
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2783195987071765226}
+  - component: {fileID: 1803089358169159955}
+  m_Layer: 0
+  m_Name: VisualRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2783195987071765226
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9076269720686682060}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4176518657430078102}
+  m_Father: {fileID: 2507605666320262016}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1803089358169159955
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9052604727993191829}
+  m_GameObject: {fileID: 9076269720686682060}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f364fb965c04434fab357ee4f21e9c9, type: 3}
@@ -352,7 +384,6 @@ GameObject:
   - component: {fileID: 2507605666320262016}
   - component: {fileID: 6753853676735108117}
   - component: {fileID: 8555704707975581678}
-  - component: {fileID: 1956730604895500499}
   - component: {fileID: 1746321181221895114}
   - component: {fileID: 25170429315621991}
   - component: {fileID: 4258209730421160306}
@@ -382,7 +413,7 @@ Transform:
   m_LocalScale: {x: 0.6, y: 0.6, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4176518657430078102}
+  - {fileID: 2783195987071765226}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!50 &6753853676735108117
@@ -539,7 +570,7 @@ MonoBehaviour:
     m_ActionName: UI/TrackedDeviceOrientation
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3262591389909098171, guid: 2946b892b6fc1f045ae8c7b375e3c640, type: 3}
+      - m_Target: {fileID: 586323255846168705, guid: ae08bd11fc6cb2144a742503d0b7b2c8, type: 3}
         m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
         m_MethodName: OpenPlayerMenu
         m_Mode: 1
@@ -558,23 +589,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &1956730604895500499
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9146339984801420171}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9e512ed06772ee4a8e9f75e80db3e4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 7
-  jumpSpeed: 13
-  hp: 3
-  damageTime: 5
-  flashTime: 0.3
 --- !u!70 &1746321181221895114
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

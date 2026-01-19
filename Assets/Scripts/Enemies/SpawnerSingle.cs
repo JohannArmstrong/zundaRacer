@@ -1,43 +1,48 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+using Mirror;
 using UnityEngine;
 
-public class SpawnerSingle : MonoBehaviour
+public class EnemySpawner : NetworkBehaviour
 {
-    [SerializeField, Header("敵オブジェクト")]
-    private GameObject enemy;
+    [SerializeField] private GameObject enemyPrefab;
 
-    private Player player;
-    private GameObject enemyObj;
+    private bool spawned = false;
 
-    void Start()
+    private float halfWidth;
+
+    public override void OnStartServer()
     {
-        player = FindFirstObjectByType<Player>();
-        enemyObj = null;
+        spawned = false;
+        halfWidth = enemyPrefab.transform.lossyScale.x / 2;
     }
 
+    [ServerCallback]
     void Update()
     {
-        SpawnEnemy();
+        if (spawned) return;
+
+        foreach (var conn in NetworkServer.connections.Values)
+        {
+            if (conn.identity == null) continue;
+
+            if (IsNearCameraX(transform.position, halfWidth))
+            {
+                SpawnEnemy();
+            }
+        }
     }
 
-    private void SpawnEnemy()
+    [Server]
+    void SpawnEnemy()
     {
-        if (!player) return;
+        GameObject enemy = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
+        NetworkServer.Spawn(enemy);
+        spawned = true;
+    }
 
-        Vector3 playerPos = player.transform.position;
-        Vector3 cameraMaxPos = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height));
-        Vector3 scale = enemy.transform.lossyScale;
-
-        float distance = Vector2.Distance(transform.position, new Vector2(player.transform.position.x, transform.position.y));
-        float spawnDis = Vector2.Distance(playerPos, new Vector2(cameraMaxPos.x + scale.x / 2.0f, playerPos.y));
-
-        if (distance <= spawnDis && !enemyObj)
-        {
-            enemyObj = Instantiate(enemy);
-            enemyObj.transform.position = transform.position;
-            transform.parent = enemyObj.transform;
-        }
+    [Server]
+    bool IsNearCameraX(Vector3 pos, float margin)
+    {
+        float x = Camera.main.WorldToViewportPoint(pos).x;
+        return x >= -margin && x <= 1f + margin;
     }
 }
