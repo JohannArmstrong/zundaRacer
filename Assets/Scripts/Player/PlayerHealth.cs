@@ -29,4 +29,12 @@ public class PlayerHealth : NetworkBehaviour
         // Vacío a propósito
         // La UI del cliente va a reaccionar a esto
     }
+
+    [ClientRpc]
+    public void RpcBounce()
+    {
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        rb.linearVelocity = new Vector2(rb.linearVelocityX, 0);
+        rb.AddForce(Vector2.up * 6f, ForceMode2D.Impulse);
+    }
 }

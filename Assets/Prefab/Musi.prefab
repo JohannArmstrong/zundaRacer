@@ -402,4 +402,4 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   maxHp: 3
-  attackPower: 1
+  contactDamage: 1
