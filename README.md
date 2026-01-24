@@ -63,7 +63,7 @@ This project is not intended for commercial release.
 ### Notes for Reviewers
 
 - The focus of this project is engineering and architecture, not art or polish
-- All assets are placeholders
+- All visual and audio assets used in this project are placeholders and are not representative of final production quality.
 - Gameplay systems are implemented with multiplayer determinism in mind
 
 ### License
