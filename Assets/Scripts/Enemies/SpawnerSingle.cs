@@ -1,18 +1,16 @@
 using Mirror;
 using UnityEngine;
 
-public class EnemySpawner : NetworkBehaviour
+public class SpawnerSingle : NetworkBehaviour
 {
     [SerializeField] private GameObject enemyPrefab;
+    [SerializeField] private float spawnOffsetX = 12f;
 
     private bool spawned = false;
-
-    private float halfWidth;
 
     public override void OnStartServer()
     {
         spawned = false;
-        halfWidth = enemyPrefab.transform.lossyScale.x / 2;
     }
 
     [ServerCallback]
@@ -24,7 +22,11 @@ public class EnemySpawner : NetworkBehaviour
         {
             if (conn.identity == null) continue;
 
-            if (IsNearCameraX(transform.position, halfWidth))
+            Transform player = conn.identity.transform;
+
+            float dx = Mathf.Abs(player.position.x - transform.position.x);
+
+            if (dx <= spawnOffsetX)
             {
                 SpawnEnemy();
             }
@@ -37,12 +39,5 @@ public class EnemySpawner : NetworkBehaviour
         GameObject enemy = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
         NetworkServer.Spawn(enemy);
         spawned = true;
-    }
-
-    [Server]
-    bool IsNearCameraX(Vector3 pos, float margin)
-    {
-        float x = Camera.main.WorldToViewportPoint(pos).x;
-        return x >= -margin && x <= 1f + margin;
     }
 }
