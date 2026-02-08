@@ -707,8 +707,10 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  moveSpeed: 7
-  jumpForce: 13
+  moveSpeed: 8
+  jumpForce: 14
+  startLineXL: -7
+  startLineXR: 7
 --- !u!114 &8647364986217487164
 MonoBehaviour:
   m_ObjectHideFlags: 0

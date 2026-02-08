@@ -43,4 +43,38 @@ public class EnemyStateMachine : NetworkBehaviour
         currentState = newState;
         currentState.Enter();
     }
+
+    void OnEnable()
+    {
+        MatchEvents.OnStateChanged += OnMatchStateChanged;
+    }
+
+    void OnDisable()
+    {
+        MatchEvents.OnStateChanged -= OnMatchStateChanged;
+    }
+
+    [Server]
+    void OnMatchStateChanged(MatchState state)
+    {
+        if (state == MatchState.Finished)
+        {
+            Freeze();
+        }
+    }
+
+    [Server]
+    void Freeze()
+    {
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.simulated = false;
+        }
+
+        Visual.SetIdle(true);
+        enabled = false; // detiene la FSM
+    }
+
 }

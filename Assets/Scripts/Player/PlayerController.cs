@@ -5,6 +5,8 @@ public class PlayerController : NetworkBehaviour
 {
     [SerializeField] float moveSpeed;
     [SerializeField] float jumpForce;
+    [SerializeField] private float startLineXL = -8f;
+    [SerializeField] private float startLineXR = 8f;
 
     Rigidbody2D rb;
     PlayerGroundCheck ground;
@@ -53,6 +55,19 @@ public class PlayerController : NetworkBehaviour
         if (!CanServerMove()) return;
 
         rb.linearVelocity = new Vector2(x * moveSpeed, rb.linearVelocity.y);
+
+        // BLOQUEO DURANTE COUNTDOWN
+        if (GameFlowManager.Instance.State == MatchState.Countdown)
+        {
+            Vector2 pos = rb.position;
+            float media = (startLineXL - startLineXR) / 2;
+            if (pos.x <= media)
+                pos.x = Mathf.Max(pos.x, startLineXL);
+            else
+                pos.x = Mathf.Min(pos.x, startLineXR);
+
+            rb.position = pos;
+        }
     }
 
     [Command]
@@ -105,10 +120,23 @@ public class PlayerController : NetworkBehaviour
 
             case MatchState.Finished:
                 canSendInput = false;
-                rb.linearVelocity = Vector2.zero;
+                if (isServer)
+                {
+                    FreezePhysics();
+                }
                 break;
         }
     }
+
+    [Server]
+    void FreezePhysics()
+    {
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        rb.linearVelocity = Vector2.zero;
+        rb.angularVelocity = 0f;
+        rb.simulated = false;
+    }
+
 
     bool CanServerMove()
     {

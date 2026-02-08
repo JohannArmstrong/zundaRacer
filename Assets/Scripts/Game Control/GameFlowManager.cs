@@ -43,6 +43,8 @@ public class GameFlowManager : NetworkBehaviour
         winnerNetId = 0;
         winnerTeamId = -1;
         matchFinished = false;
+
+         StartMatch(); //agregado para probar
     }
 
     // ============================

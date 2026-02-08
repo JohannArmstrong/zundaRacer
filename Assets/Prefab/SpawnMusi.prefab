@@ -51,7 +51,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   enemyPrefab: {fileID: 6773102291556012072, guid: 1563652fa08038c469624f8f064a7919, type: 3}
-  spawnOffsetX: 10
+  spawnOffsetX: 9
 --- !u!212 &-5806558000754461664
 SpriteRenderer:
   m_ObjectHideFlags: 0

@@ -4,9 +4,23 @@ using TMPro;
 public class MatchUIController : MonoBehaviour
 {
     [SerializeField] private Canvas resultsCanvas;
-    [SerializeField] private TMP_Text countdownText;
+    [SerializeField] private Canvas countdownCanvas;
+
+    private TMP_Text countdownText;
 
 
+
+    void Awake()
+    {
+        countdownText = countdownCanvas.GetComponentInChildren<TMP_Text>();
+
+        // Estado inicial seguro
+        if (countdownCanvas != null)
+            countdownCanvas.gameObject.SetActive(false);
+
+        if (resultsCanvas != null)
+            resultsCanvas.gameObject.SetActive(false);
+    }
 
     void OnEnable()
     {
@@ -22,16 +36,28 @@ public class MatchUIController : MonoBehaviour
 
     void ShowCountdown(int seconds)
     {
+        countdownCanvas.gameObject.SetActive(true);
         countdownText.text = seconds.ToString();
         countdownText.gameObject.SetActive(true);
     }
 
     void OnStateChanged(MatchState state)
     {
-        if (state == MatchState.Playing)
-            countdownText.gameObject.SetActive(false);
+        switch (state)
+        {
+            case MatchState.Countdown:
+                // Se activa por los ticks
+                break;
 
-        if (state == MatchState.Finished)
-            resultsCanvas.gameObject.SetActive(true);
+            case MatchState.Playing:
+                if (countdownCanvas != null)
+                    countdownCanvas.gameObject.SetActive(false);
+                break;
+
+            case MatchState.Finished:
+                if (resultsCanvas != null)
+                    resultsCanvas.gameObject.SetActive(true);
+                break;
+        }
     }
 }
