@@ -56,8 +56,9 @@ public class PlayerController : NetworkBehaviour
 
         rb.linearVelocity = new Vector2(x * moveSpeed, rb.linearVelocity.y);
 
-        // BLOQUEO DURANTE COUNTDOWN
-        if (GameFlowManager.Instance.State == MatchState.Countdown)
+        // BLOQUEO DURANTE WAITING & COUNTDOWN
+        MatchState state = GameFlowManager.Instance.State;
+        if (state == MatchState.Waiting || state == MatchState.Countdown)
         {
             Vector2 pos = rb.position;
             float media = (startLineXL - startLineXR) / 2;

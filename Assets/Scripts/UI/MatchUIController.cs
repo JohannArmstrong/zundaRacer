@@ -5,6 +5,8 @@ public class MatchUIController : MonoBehaviour
 {
     [SerializeField] private Canvas resultsCanvas;
     [SerializeField] private Canvas countdownCanvas;
+    [SerializeField] private GameObject lifeCanvas;
+    [SerializeField] private Canvas lobbyCanvas;
 
     private TMP_Text countdownText;
 
@@ -47,11 +49,13 @@ public class MatchUIController : MonoBehaviour
         {
             case MatchState.Countdown:
                 // Se activa por los ticks
+                lobbyCanvas.gameObject.SetActive(false);
                 break;
 
             case MatchState.Playing:
                 if (countdownCanvas != null)
                     countdownCanvas.gameObject.SetActive(false);
+                    lifeCanvas.gameObject.SetActive(true);
                 break;
 
             case MatchState.Finished:

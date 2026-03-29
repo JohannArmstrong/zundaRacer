@@ -1,6 +1,7 @@
 using Mirror;
 using UnityEngine;
 using System.Collections;
+using System.Linq;
 
 public class GameFlowManager : NetworkBehaviour
 {
@@ -44,7 +45,7 @@ public class GameFlowManager : NetworkBehaviour
         winnerTeamId = -1;
         matchFinished = false;
 
-         StartMatch(); //agregado para probar
+        //StartMatch(); //para que comienze sin necesidad de ready
     }
 
     // ============================
@@ -67,6 +68,10 @@ public class GameFlowManager : NetworkBehaviour
         winnerNetId = winner;
         winnerTeamId = -1;
         state = MatchState.Finished;
+        foreach (var p in FindObjectsByType<PlayerReady>(FindObjectsSortMode.None))
+        {
+            p.ResetReady();
+        }
     }
 
     [Server]
@@ -80,13 +85,15 @@ public class GameFlowManager : NetworkBehaviour
         state = MatchState.Finished;
     }
 
-    // ============================
-    // COUNTDOWN
-    // ============================
+
+    // COUNTDOWN ----------------------------------------------
+
 
     [Server]
     IEnumerator CountdownRoutine()
     {
+        Debug.Log("COUNTDOWN START");
+
         state = MatchState.Countdown;
 
         float t = countdownTime;
@@ -97,12 +104,12 @@ public class GameFlowManager : NetworkBehaviour
             t--;
         }
 
+        Debug.Log("PLAYING");
+
         state = MatchState.Playing;
     }
 
-    // ============================
-    // CLIENT
-    // ============================
+    // CLIENT ----------------------------------------------------
 
     void OnStateChanged(MatchState oldState, MatchState newState)
     {
@@ -114,4 +121,34 @@ public class GameFlowManager : NetworkBehaviour
     {
         MatchEvents.RaiseCountdown(seconds);
     }
+    
+    [Server]
+    public void CheckAllPlayersReady()
+    {
+        Debug.Log("Checking ready players");
+
+        if (state != MatchState.Waiting)
+            return;
+
+        var players = FindObjectsByType<PlayerReady>(FindObjectsSortMode.None);
+
+        Debug.Log("Checking ready players");
+
+        if (players.Length == 0)
+            return;
+
+        foreach (var p in players)
+        {
+            Debug.Log(p.playerName + " ready: " + p.IsReady);
+
+            if (!p.IsReady)
+                return;
+        }
+
+        // Si llegamos acá → TODOS están ready
+        Debug.Log("ALL READY → START MATCH");
+
+        StartMatch();
+    }
+
 }
